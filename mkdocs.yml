@@ -1,0 +1,6 @@
+site_name: Recruitment project
+
+repo_url: https://github.com/KubaSzarpak/Recruitment-Project
+
+theme:
+  name: readthedocs
