@@ -1,0 +1,40 @@
+services:
+  ui:
+    image: jakubszarpak/recruitment:ui
+    build:
+      context: ui
+      dockerfile: dockerfile
+    expose:
+      - 3000
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./ui:/usr/app
+
+
+  api:
+    image: jakubszarpak/recruitment:api
+    build:
+      context: api
+      dockerfile: dockerfile
+    expose:
+      - 8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api:/usr/app
+
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password123!
+      PGDATA: /data/postgres
+    expose:
+      - 5432
+    ports:
+      - "5432:5432"
+    volumes:
+      - /var/lib/postgres:/data/postgres
+
