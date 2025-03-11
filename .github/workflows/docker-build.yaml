@@ -2,8 +2,7 @@ name: Docker Build Pipeline
 
 on:
   push:
-#    branches: [ "master" ]
-    branches: [ "*" ]
+    branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
 
