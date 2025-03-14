@@ -1,35 +1,46 @@
 services:
   ui:
-    image: jakubszarpak/recruitment:ui
+    image: ${DOCKER_REGISTRY}/recruitment:${UI_TAG}
     build:
       context: ui
-      dockerfile: dockerfile
+      dockerfile: Dockerfile
     expose:
       - 3000
     ports:
       - "3000:3000"
     volumes:
       - ./ui:/usr/app
-
+    depends_on:
+      api:
+        condition: service_started
 
   api:
-    image: jakubszarpak/recruitment:api
+    image: ${DOCKER_REGISTRY}/recruitment:${API_TAG}
     build:
       context: api
-      dockerfile: dockerfile
+      dockerfile: Dockerfile
     expose:
       - 8000
     ports:
       - "8000:8000"
+    environment:
+      - DATABASE_PORT=${DATABASE_PORT}
+      - DATABASE_USER=${DATABASE_USER}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE_NAME=${DATABASE_NAME}
+      - DATABASE_HOST=${DATABASE_HOST}
     volumes:
       - ./api:/usr/app
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   postgres:
     image: postgres
     environment:
-      POSTGRES_DB: db
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password123!
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
       PGDATA: /data/postgres
     expose:
       - 5432
@@ -37,4 +48,8 @@ services:
       - "5432:5432"
     volumes:
       - /var/lib/postgres:/data/postgres
-
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DATABASE_USER} -d ${DATABASE_NAME}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5

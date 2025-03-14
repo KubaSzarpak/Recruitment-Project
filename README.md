@@ -103,7 +103,7 @@ Next steps are **optinal**. You can skip them and go straight ahead to **step 5*
    ```sh
    python -m venv .venv
    source .venv/bin/activate
-   pip install requirements.txt
+   pip install -r requirements.txt
    ```
 
    Now run src/model.py to train you model.
@@ -139,6 +139,18 @@ If app is not running, try checking for any error with this commands:
   ```
   docker compose logs <container>
   ```
+  
+### Running pipeline locally
+
+1. Add required values to .env
+2. Populate .env variables to your environment
+    ```sh
+    export $(cat .env | xargs)
+    ```
+3. Run pipeline
+    ```sh
+   act -s DOCKERHUB_USERNAME=${DOCKERHUB_USERNAME} -s DOCKERHUB_TOKEN=${DOCKERHUB_TOKEN}
+    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
